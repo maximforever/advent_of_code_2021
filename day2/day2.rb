@@ -2,9 +2,14 @@ require 'pry'
 
 class Navigator
   def initialize(file_name)
-    @input_array = File.read(file_name).split("\n")
+    create_input_array(file_name)
     @depth = 0
     @position = 0
+    @aim = 0
+  end
+
+  def create_input_array(file_name)
+    @input_array ||= File.read(file_name).split("\n")
   end
 
   def calculate_position
@@ -31,11 +36,12 @@ class Navigator
   end
 
   def change_depth(distance)
-    @depth += distance
+    @aim += distance
   end
 
   def change_position(distance)
     @position += distance
+    @depth += @aim * distance
   end
 end
 
