@@ -1,35 +1,38 @@
-input_array = []
-readings_increasing = 0
-previous_reading = nil
+require 'pry'
 
-readings_by_three_increasing = 0
-previous_sum_by_three = nil
+class GroupCounter
+  def initialize(file_name)
+    @input_array = File.read(file_name).split("\n").map {|line| line.to_i }
+  end
 
-GROUPING_SIZE = 3
+  def get_increasing_numbers_by_grouping(grouping_size)
+    readings_by_grouping_increasing = 0
+    previous_sum_by_grouping = 0
 
-# read the text file into an array
-File.readlines('input.txt').each do |line|
-  input_array << line.strip.to_i
+    # note: the first index is 0 while the first run is 1
+    times_to_run = @input_array.length - grouping_size
+    last_index_to_run_on = @input_array.length - 1 - grouping_size
+
+    puts "last_index_to_run_on #{last_index_to_run_on}"
+
+    times_to_run.times do |index|
+      overlapping_sum = 0
+      
+      (grouping_size - 1).times do |group_index|
+        overlapping_sum += @input_array[index + group_index + 1]
+      end
+
+      this_sum_by_grouping = @input_array[index] + overlapping_sum
+      next_sum_by_grouping = @input_array[index + grouping_size] + overlapping_sum
+
+      readings_by_grouping_increasing += 1 if next_sum_by_grouping > this_sum_by_grouping
+      previous_sum_by_grouping = this_sum_by_grouping
+    end
+
+    puts "# OF INCREASING READINGS, GROUPED BY #{grouping_size}: #{readings_by_grouping_increasing}"
+  end
 end
 
-
-# PART 1
-input_array.each do |reading|
-  readings_increasing += 1  if (!previous_reading.nil? && reading > previous_reading)
-  previous_reading = reading
-end
-
-# PART 2
-# there is a way to generalize it to X numbers but I'm not sure what it is...
-(input_array.length - 3).times do |index|
-  overlapping_sum = input_array[index + 1] + input_array[index + 2]
-  this_sum_by_three = input_array[index] + overlapping_sum
-  next_sum_by_three = input_array[index+ 3] + overlapping_sum
-
-  readings_by_three_increasing += 1 if (!previous_sum_by_three.nil? && next_sum_by_three > this_sum_by_three)
-
-  previous_sum_by_three = this_sum_by_three
-end
-
-puts "READINGS INCREASING: #{readings_increasing}"
-puts "READINGS BY THREE INCREASING: #{readings_by_three_increasing}"
+counter = GroupCounter.new('input.txt')
+counter.get_increasing_numbers_by_grouping(1)
+counter.get_increasing_numbers_by_grouping(3)
