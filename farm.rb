@@ -1,8 +1,9 @@
 require 'pry'
 
 class Farm
-  def initialize
+  def initialize(farm_name)
     @animals = []
+    @farm_name = farm_name
     spawn_animals
   end
 
@@ -15,6 +16,7 @@ class Farm
   end
 
   def say_animal_names
+    puts "Welcome to #{@farm_name}! Come meet our animals:"
     @animals.each { |animal| animal.say_name}
   end
 end
@@ -35,5 +37,5 @@ class Animal
   # end
 end
 
-farm = Farm.new
+farm = Farm.new("Max's Frolick-y Farm")
 farm.say_animal_names
