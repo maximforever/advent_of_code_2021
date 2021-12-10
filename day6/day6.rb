@@ -3,7 +3,6 @@ require 'pry'
 class FishDaddy
   def initialize(file_name)
     @fish = []
-    @current_day = 0
     @total_days_to_observe = 18
 
     read_file(file_name)
@@ -20,20 +19,18 @@ class FishDaddy
     end
   end
 
-  def go_to_town
-    print_intro if @current_day == 0
-    print_current_state
+  def count_of_fish_after(days)
+    print_intro
 
-    if @current_day < @total_days_to_observe
-      make_more_fish
-      @current_day += 1
-      go_to_town 
-    else
-      puts "The total number of fish at the end of day #{@current_day} is #{@fish.size}"
+    days.times do |day|
+      #print_current_state(day)
+      go_to_town
     end
+
+    puts "The total number of fish at the end of day #{days} is #{@fish.size}"
   end
 
-  def make_more_fish
+  def go_to_town
     @fish.each do |fish|
       if fish.days_left == 0
         fish.days_left = 6
@@ -50,10 +47,10 @@ class FishDaddy
     @fish << Fish.new(8, true)
   end
 
-  def print_current_state
+  def print_current_state(day)
     fish_array = @fish.map { |fish| "#{fish.days_left},"}
     fish_array = fish_array.join("").slice(0..-2)
-    puts "After #{@current_day} days: #{fish_array}"
+    puts "After #{day} days: #{fish_array}"
   end
 
   def print_intro
@@ -76,4 +73,4 @@ end
 
 
 fish_daddy = FishDaddy.new('input.txt')
-fish_daddy.go_to_town
+fish_daddy.count_of_fish_after(80)
