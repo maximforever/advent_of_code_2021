@@ -15,7 +15,7 @@ class FishDaddy
 
   def create_initial_fish
     @input_array.each do |days_left|
-      @fish << Fish.new(days_left, false)
+      @fish << Fish.new(days_left)
     end
   end
 
@@ -23,7 +23,7 @@ class FishDaddy
     print_intro
 
     days.times do |day|
-      #print_current_state(day)
+      print_current_state(day)
       go_to_town
     end
 
@@ -31,20 +31,24 @@ class FishDaddy
   end
 
   def go_to_town
+    new_fish_to_add = 0
+
     @fish.each do |fish|
       if fish.days_left == 0
         fish.days_left = 6
-        make_new_fish
-      elsif !fish.just_born
-        fish.days_left -= 1
+        new_fish_to_add += 1
       else
-        fish.just_born = false
+        fish.days_left -= 1
       end
+    end
+
+    new_fish_to_add.times do |num|
+      make_new_fish
     end
   end
 
   def make_new_fish
-    @fish << Fish.new(8, true)
+    @fish << Fish.new(8)
   end
 
   def print_current_state(day)
@@ -63,14 +67,13 @@ class FishDaddy
 end
 
 class Fish
-  def initialize(days_left, just_born)
+  def initialize(days_left)
     @days_left = days_left
-    @just_born = just_born
   end
 
-  attr_accessor :days_left, :just_born
+  attr_accessor :days_left
 end
 
 
-fish_daddy = FishDaddy.new('input.txt')
+fish_daddy = FishDaddy.new('test_input.txt')
 fish_daddy.count_of_fish_after(80)
